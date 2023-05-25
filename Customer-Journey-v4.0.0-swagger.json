@@ -1,0 +1,628 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is Swagger UI environment generated for Party Aggregate",
+    "version": "4.0.0",
+    "title": "Party Aggregate",
+    "contact": {
+      "name": "PiA(people in action)",
+      "url": "http://www.pia-team.com/",
+      "email": "info@pia-team.com"
+    }
+  },
+  "basePath": "/api/customerJourney/v1",
+  "tags": [
+    {
+      "name": "aggregate",
+      "description": "Aggregate Controller"
+    }
+  ],
+  "paths": {
+    "/createCustomer": {
+      "post": {
+        "tags": [
+          "aggregate"
+        ],
+        "summary": "Creates a Customer",
+        "description": "This operation creates a Customer entity.",
+        "operationId": "createCustomer",
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "fatPayload",
+            "description": "The Customer Fat Payload to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Create_List"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/createPartner": {
+      "post": {
+        "tags": [
+          "aggregate"
+        ],
+        "summary": "Creates a Partner",
+        "description": "This operation creates a Partner entity.",
+        "operationId": "createPartner",
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "fatPayload",
+            "description": "The Partner Fat Payload to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Create_List"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/createRelatedParty": {
+      "post": {
+        "tags": [
+          "aggregate"
+        ],
+        "summary": "Creates a RelatedParty",
+        "description": "This operation creates a RelatedParty entity.",
+        "operationId": "createRelatedParty",
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "fatPayload",
+            "description": "The RelatedParty Fat Payload to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Create_List"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "AccountOperation": {
+      "type": "object",
+      "properties": {
+        "entityPath": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "post",
+            "get",
+            "patch",
+            "delete"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "provisionalId": {
+          "type": "string"
+        },
+        "resourceEntity": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "title": "AccountOperation"
+    },
+    "AgreementOperation": {
+      "type": "object",
+      "properties": {
+        "entityPath": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "post",
+            "get",
+            "patch",
+            "delete"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "provisionalId": {
+          "type": "string"
+        },
+        "resourceEntity": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "title": "AgreementOperation"
+    },
+    "Create_List": {
+      "type": "object",
+      "properties": {
+        "accountOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountOperation"
+          }
+        },
+        "agreementOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AgreementOperation"
+          }
+        },
+        "customerOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomerOperation"
+          }
+        },
+        "documentOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DocumentOperation"
+          }
+        },
+        "geoAddressOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GeoAddressOperation"
+          }
+        },
+        "partnerOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PartnerOperation"
+          }
+        },
+        "partyOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PartyOperation"
+          }
+        },
+        "partyRoleOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PartyRoleOperation"
+          }
+        },
+        "relatedPartyOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RelatedPartyOperation"
+          }
+        }
+      },
+      "title": "Create_List"
+    },
+    "CustomerOperation": {
+      "type": "object",
+      "properties": {
+        "entityPath": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "post",
+            "get",
+            "patch",
+            "delete"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "provisionalId": {
+          "type": "string"
+        },
+        "resourceEntity": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "title": "CustomerOperation"
+    },
+    "DocumentOperation": {
+      "type": "object",
+      "properties": {
+        "entityPath": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "post",
+            "get",
+            "patch",
+            "delete"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "provisionalId": {
+          "type": "string"
+        },
+        "resourceEntity": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "title": "DocumentOperation"
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "@baseType": {
+          "type": "string"
+        },
+        "@schemaLocation": {
+          "type": "string"
+        },
+        "@type": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "referenceError": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "Error",
+      "description": "Used when an API throws an Error, typically with a HTTP error response-code (3xx, 4xx, 5xx)"
+    },
+    "GeoAddressOperation": {
+      "type": "object",
+      "properties": {
+        "entityPath": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "post",
+            "get",
+            "patch",
+            "delete"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "provisionalId": {
+          "type": "string"
+        },
+        "resourceEntity": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "title": "GeoAddressOperation"
+    },
+    "PartnerOperation": {
+      "type": "object",
+      "properties": {
+        "entityPath": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "post",
+            "get",
+            "patch",
+            "delete"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "provisionalId": {
+          "type": "string"
+        },
+        "resourceEntity": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "title": "PartnerOperation"
+    },
+    "PartyOperation": {
+      "type": "object",
+      "properties": {
+        "entityPath": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "post",
+            "get",
+            "patch",
+            "delete"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "provisionalId": {
+          "type": "string"
+        },
+        "resourceEntity": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "title": "PartyOperation"
+    },
+    "PartyRoleOperation": {
+      "type": "object",
+      "properties": {
+        "entityPath": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "post",
+            "get",
+            "patch",
+            "delete"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "provisionalId": {
+          "type": "string"
+        },
+        "resourceEntity": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "title": "PartyRoleOperation"
+    },
+    "RelatedPartyOperation": {
+      "type": "object",
+      "properties": {
+        "entityPath": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "post",
+            "get",
+            "patch",
+            "delete"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "provisionalId": {
+          "type": "string"
+        },
+        "resourceEntity": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "title": "RelatedPartyOperation"
+    }
+  }
+}
