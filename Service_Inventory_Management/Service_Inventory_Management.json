@@ -1,0 +1,1953 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "## TMF API Reference : TMF 638 - Service Inventory Management   Version 4.0   The intent of this API is to provide a consistent/standardized mechanism to query and manipulate the Service inventory.  The Service Inventory API can be used to query the service instances for a customer via Self Service Portal or the Call Centre operator can query the service instances on behalf of the customer while a customer may have a complaint or a query. Note: Only the CustomerFacingServices instances will be presented to the customer.  The Service Inventory API can be called by the Service Order Management to create a new service instance/ update an existing service instance in the Service Inventory.  ### Service resource Service is an abstract base class for defining the Service hierarchy. All Services are characterized as either being possibly visible and usable by a Customer or not. This gives rise to the two subclasses of  Service: CustomerFacingService and ResourceFacingService.  ### Service Inventory API performs the following operations on service  : - Retrieve  a service or a collection of services depending on filter criteria - Partial update of a service (including updating rules) - Create a service (including default values and creation rules and for administration users only) - Delete a service (for administration users only) - Notification of events on service  Copyright (c)TM Forum 2019. All Rights Reserved.",
+    "version": "Version v4 (prepared with Service Inventory Management API REST Specification TMF638)",
+    "title": "Service Inventory Management",
+    "contact": {
+      "name": "PiA(people in action)",
+      "url": "http://www.pia-team.com/",
+      "email": "info@pia-team.com"
+    },
+    "license": {
+      "name": "PiA License",
+      "url": "http://www.pia-team.com"
+    }
+  },
+  "host": "demo.test.orbitant.dev",
+  "basePath": "/api/serviceInventoryManagement/v4",
+  "tags": [
+    {
+      "name": "hub",
+      "description": "The Hub API"
+    },
+    {
+      "name": "service",
+      "description": "The Service Inventory API"
+    }
+  ],
+  "paths": {
+    "/hub": {
+      "post": {
+        "tags": [
+          "hub"
+        ],
+        "summary": "Register a listener",
+        "description": "Sets the communication endpoint address the service instance must use to deliver information about its health state, execution state, failures and metrics.",
+        "operationId": "registerListener",
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Data containing the callback endpoint to deliver the information",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventSubscriptionInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventSubscription"
+            }
+          },
+          "201": {
+            "description": "Subscribed",
+            "schema": {
+              "$ref": "#/definitions/EventSubscription"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/hub/{id}": {
+      "delete": {
+        "tags": [
+          "hub"
+        ],
+        "summary": "Unregister a listener",
+        "description": "Resets the communication endpoint address the service instance must use to deliver information about its health state, execution state, failures and metrics.",
+        "operationId": "unregisterListener",
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the registered listener",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Deleted"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/service": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "summary": "List or find Service objects",
+        "description": "This operation list or find Service entities",
+        "operationId": "listService",
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Comma-separated properties to be provided in response",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Requested number of resources to be provided in response",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Requested index for start of resources to be provided in response",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort field of resources to be provided in response",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Service"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Creates a Service",
+        "description": "This operation creates a Service entity.",
+        "operationId": "createService",
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "serviceCreate",
+            "description": "The Service to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ServiceCreate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Service"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Service"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/service/{id}": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Retrieves a Service by ID",
+        "description": "This operation retrieves a Service entity. Attribute selection is enabled for all first level attributes.",
+        "operationId": "retrieveService",
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Comma-separated properties to provide in response",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the Service",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Service"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Deletes a Service",
+        "description": "This operation deletes a Service entity.",
+        "operationId": "deleteService",
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the Service",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Deleted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "patch": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Updates partially a Service",
+        "description": "This operation updates partially a Service entity.",
+        "operationId": "patchService",
+        "consumes": [
+          "application/json-patch+json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the ProductOrder",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "patch",
+            "description": "The ProductOrder to be updated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatch"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "schema": {
+              "$ref": "#/definitions/Service"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "Characteristic": {
+      "type": "object",
+      "required": [
+        "name",
+        "value"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class Extensible name"
+        },
+        "characteristicRelationship": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CharacteristicRelationship"
+          }
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the characteristic"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the characteristic"
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the characteristic"
+        },
+        "valueType": {
+          "type": "string",
+          "description": "Data type of the value of the characteristic"
+        }
+      },
+      "title": "Characteristic",
+      "description": "Describes a given characteristic of an object or entity through a name/value pair."
+    },
+    "CharacteristicRelationship": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the characteristic"
+        },
+        "relationshipType": {
+          "type": "string",
+          "description": "The type of relationship"
+        }
+      },
+      "title": "CharacteristicRelationship",
+      "description": "Another Characteristic that is related to the current Characteristic;"
+    },
+    "ConstraintRef": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@referredType": {
+          "type": "string",
+          "description": "The (class) type of the referred constraint"
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class Extensible name"
+        },
+        "href": {
+          "type": "string",
+          "description": "Hyperlink reference to the target constraint"
+        },
+        "id": {
+          "type": "string",
+          "description": "reference id to the target constraint"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name given to the constraint"
+        },
+        "version": {
+          "type": "string",
+          "description": "constraint version"
+        }
+      },
+      "title": "ConstraintRef",
+      "description": "Constraint reference. The Constraint resource represents a policy/rule applied to an entity or entity spec."
+    },
+    "Error": {
+      "type": "object",
+      "required": [
+        "code",
+        "reason"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class."
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class entity name."
+        },
+        "code": {
+          "type": "string",
+          "description": "Application relevant detail, defined in the API or a common list."
+        },
+        "message": {
+          "type": "string",
+          "description": "More details and corrective actions related to the error which can be shown to a client user."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Explanation of the reason for the error which can be shown to a client user."
+        },
+        "referenceError": {
+          "type": "string",
+          "description": "URI of documentation describing the error."
+        },
+        "status": {
+          "type": "string",
+          "description": "HTTP Error code extension"
+        }
+      },
+      "title": "Error",
+      "description": "Used when an API throws an Error, typically with a HTTP error response-code (3xx, 4xx, 5xx)"
+    },
+    "EventSubscription": {
+      "type": "object",
+      "required": [
+        "callback",
+        "id"
+      ],
+      "properties": {
+        "callback": {
+          "type": "string",
+          "description": "The callback being registered."
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Name of created by user"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date of creation"
+        },
+        "id": {
+          "type": "string",
+          "description": "Id of the listener"
+        },
+        "query": {
+          "type": "string",
+          "description": "additional data to be passed"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Version number of the entity"
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "Name of updated by user"
+        },
+        "updatedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date of update"
+        }
+      },
+      "title": "EventSubscription",
+      "description": "Sets the communication endpoint address the service instance must use to deliver notification information"
+    },
+    "EventSubscriptionInput": {
+      "type": "object",
+      "required": [
+        "callback"
+      ],
+      "properties": {
+        "callback": {
+          "type": "string",
+          "description": "The callback being registered."
+        },
+        "query": {
+          "type": "string",
+          "description": "additional data to be passed"
+        }
+      },
+      "title": "EventSubscriptionInput",
+      "description": "Sets the communication endpoint address the service instance must use to deliver notification information"
+    },
+    "ExternalReference": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class entity name"
+        },
+        "externalReferenceType": {
+          "type": "string",
+          "description": "Type of the external reference"
+        },
+        "href": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "External reference name"
+        }
+      },
+      "title": "ExternalReference",
+      "description": "External reference of the individual or reference in other system"
+    },
+    "Feature": {
+      "type": "object",
+      "required": [
+        "featureCharacteristic",
+        "id",
+        "name"
+      ],
+      "properties": {
+        "constraint": {
+          "type": "array",
+          "description": "This is a list of feature constraints.",
+          "items": {
+            "$ref": "#/definitions/ConstraintRef"
+          }
+        },
+        "featureCharacteristic": {
+          "type": "array",
+          "description": "This is a list of Characteristics for a particular feature.",
+          "items": {
+            "$ref": "#/definitions/Characteristic"
+          }
+        },
+        "featureRelationship": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FeatureRelationship"
+          }
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the feature."
+        },
+        "isBundle": {
+          "type": "boolean",
+          "description": "True if this is a feature group. Default is false."
+        },
+        "isEnabled": {
+          "type": "boolean",
+          "description": "True if this feature is enabled. Default is true."
+        },
+        "name": {
+          "type": "string",
+          "description": "This is the name for the feature."
+        }
+      },
+      "title": "Feature",
+      "description": "Configuration feature."
+    },
+    "FeatureRelationship": {
+      "type": "object",
+      "required": [
+        "name",
+        "relationshipType"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the target feature."
+        },
+        "name": {
+          "type": "string",
+          "description": "This is the name of the target feature."
+        },
+        "relationshipType": {
+          "type": "string",
+          "description": "This is the type of the feature relationship."
+        },
+        "validFor": {
+          "description": "The period for which this feature relationship is valid.",
+          "$ref": "#/definitions/TimePeriod"
+        }
+      },
+      "title": "FeatureRelationship",
+      "description": "Configuration feature"
+    },
+    "JsonPatch": {
+      "type": "object",
+      "title": "JsonPatch"
+    },
+    "Note": {
+      "type": "object",
+      "required": [
+        "author",
+        "date",
+        "text"
+      ],
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Author of the note"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date of the note"
+        },
+        "id": {
+          "type": "string",
+          "description": "Identifier of the note within its containing entity (may or may not be globally unique, depending on provider implementation)"
+        },
+        "text": {
+          "type": "string",
+          "description": "Text of the note"
+        }
+      },
+      "title": "Note",
+      "description": "Extra information about a given entity"
+    },
+    "RelatedEntityRefOrValue": {
+      "type": "object",
+      "required": [
+        "role"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@referredType": {
+          "type": "string",
+          "description": "The actual type of the target instance when needed for disambiguation."
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class Extensible name"
+        },
+        "href": {
+          "type": "string",
+          "description": "Reference of the related entity."
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of a related entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the related entity."
+        },
+        "role": {
+          "type": "string"
+        }
+      },
+      "title": "RelatedEntityRefOrValue",
+      "description": "A reference to an entity, where the type of the entity is not known in advance. A related entity defines a entity described by reference or by value linked to a specific entity. The polymorphic attributes @type, @schemaLocation & @referredType are related to the Entity and not the RelatedEntityRefOrValue class itself"
+    },
+    "RelatedParty": {
+      "type": "object",
+      "required": [
+        "@referredType",
+        "id"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@referredType": {
+          "type": "string",
+          "description": "The actual type of the target instance when needed for disambiguation."
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class Extensible name"
+        },
+        "href": {
+          "type": "string",
+          "description": "Hyperlink reference"
+        },
+        "id": {
+          "type": "string",
+          "description": "unique identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the related entity."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role played by the related party"
+        }
+      },
+      "title": "RelatedParty",
+      "description": "Related Entity reference. A related party defines party or party role linked to a specific entity."
+    },
+    "RelatedPlaceRefOrValue": {
+      "type": "object",
+      "required": [
+        "role"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@referredType": {
+          "type": "string",
+          "description": "The actual type of the target instance when needed for disambiguation."
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class Extensible name"
+        },
+        "href": {
+          "type": "string",
+          "description": "Unique reference of the place"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the place"
+        },
+        "name": {
+          "type": "string",
+          "description": "A user-friendly name for the place, such as [Paris Store], [London Store], [Main Home]"
+        },
+        "role": {
+          "type": "string"
+        }
+      },
+      "title": "RelatedPlaceRefOrValue",
+      "description": "Related Entity reference. A related place defines a place described by reference or by value linked to a specific entity. The polymorphic attributes @type, @schemaLocation & @referredType are related to the place entity and not the RelatedPlaceRefOrValue class itself"
+    },
+    "RelatedServiceOrderItem": {
+      "type": "object",
+      "required": [
+        "itemId",
+        "serviceOrderId"
+      ],
+      "properties": {
+        "@referredType": {
+          "type": "string",
+          "description": "The actual type of the target instance when needed for disambiguation."
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class Extensible name"
+        },
+        "itemAction": {
+          "type": "string",
+          "description": "Action of the order item for this service",
+          "enum": [
+            "add",
+            "modify",
+            "delete",
+            "noChange",
+            "statusChange.Suspend",
+            "statusChange.Resume",
+            "modify.Migration",
+            "modify.Takeover",
+            "modify.Relocation"
+          ]
+        },
+        "itemId": {
+          "type": "string",
+          "description": "Identifier of the order item where the service was managed"
+        },
+        "role": {
+          "type": "string",
+          "description": "role of the service order item for this service"
+        },
+        "serviceOrderHref": {
+          "type": "string",
+          "description": "Reference of the related entity."
+        },
+        "serviceOrderId": {
+          "type": "string",
+          "description": "Unique identifier of a related entity."
+        }
+      },
+      "title": "RelatedServiceOrderItem",
+      "description": "RelatedServiceOrderItem (a ServiceOrder item) .The service order item which triggered service creation/change/termination."
+    },
+    "ResourceRef": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@referredType": {
+          "type": "string",
+          "description": "The actual type of the target instance when needed for disambiguation."
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class Extensible name"
+        },
+        "href": {
+          "type": "string",
+          "description": "Hyperlink reference"
+        },
+        "id": {
+          "type": "string",
+          "description": "unique identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the related entity."
+        }
+      },
+      "title": "ResourceRef"
+    },
+    "Service": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Is it a customer facing or resource facing service"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Name of created by user"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date of creation"
+        },
+        "description": {
+          "type": "string",
+          "description": "Free-text description of the service"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the service ends"
+        },
+        "externalReference": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExternalReference"
+          }
+        },
+        "feature": {
+          "type": "array",
+          "description": "A list of feature associated with this service ",
+          "items": {
+            "$ref": "#/definitions/Feature"
+          }
+        },
+        "hasStarted": {
+          "type": "boolean",
+          "description": "If TRUE, this Service has already been started"
+        },
+        "href": {
+          "type": "string",
+          "description": "Reference of the service"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the service"
+        },
+        "isBundle": {
+          "type": "boolean",
+          "description": "If true, the service is a ServiceBundle which regroup a service hierachy. If false, the service is a 'atomic' service (hierachy leaf)."
+        },
+        "isServiceEnabled": {
+          "type": "boolean",
+          "description": "If FALSE and hasStarted is FALSE, this particular Service has NOT been enabled for use - if FALSE and hasStarted is TRUE then the service has failed "
+        },
+        "isStateful": {
+          "type": "boolean",
+          "description": "If TRUE, this Service can be changed without affecting any other services"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the service"
+        },
+        "note": {
+          "type": "array",
+          "description": "A list of notes made on this service",
+          "items": {
+            "$ref": "#/definitions/Note"
+          }
+        },
+        "place": {
+          "type": "array",
+          "description": "A list of places (Place [*]). Used to define a place useful for the service (for example a geographical place whre the service is installed)",
+          "items": {
+            "$ref": "#/definitions/RelatedPlaceRefOrValue"
+          }
+        },
+        "relatedEntity": {
+          "type": "array",
+          "description": "A list of related  entity in relationship with this service ",
+          "items": {
+            "$ref": "#/definitions/RelatedEntityRefOrValue"
+          }
+        },
+        "relatedParty": {
+          "type": "array",
+          "description": "A list of related party references (RelatedParty [*]). A related party defines party or party role linked to a specific entity",
+          "items": {
+            "$ref": "#/definitions/RelatedParty"
+          }
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Version number of the entity"
+        },
+        "serviceCharacteristic": {
+          "type": "array",
+          "description": "A list of characteristics that characterize this service (ServiceCharacteristic [*]) ",
+          "items": {
+            "$ref": "#/definitions/Characteristic"
+          }
+        },
+        "serviceDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the service was created (whatever its status)."
+        },
+        "serviceOrderItem": {
+          "type": "array",
+          "description": "A list of service order items related to this service",
+          "items": {
+            "$ref": "#/definitions/RelatedServiceOrderItem"
+          }
+        },
+        "serviceRelationship": {
+          "type": "array",
+          "description": "A list of service relationships (ServiceRelationship [*]). Describes links with other service(s) in the inventory.",
+          "items": {
+            "$ref": "#/definitions/ServiceRelationship"
+          }
+        },
+        "serviceSpecification": {
+          "description": "The specification from which this service was instantiated",
+          "$ref": "#/definitions/ServiceSpecificationRef"
+        },
+        "serviceType": {
+          "type": "string",
+          "description": "Business type of the service"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the service starts"
+        },
+        "startMode": {
+          "type": "string",
+          "description": "This attribute is an enumerated integer that indicates how the Service is started, such as: 0: Unknown; 1: Automatically by the managed environment; 2: Automatically by the owning device; 3: Manually by the Provider of the Service; 4: Manually by a Customer of the Provider; 5: Any of the above"
+        },
+        "state": {
+          "type": "string",
+          "description": "The life cycle state of the service, such as designed, reserved, active, etc...",
+          "enum": [
+            "created",
+            "pendingActive",
+            "cancelled",
+            "feasibilityChecked",
+            "pendingTerminate",
+            "designed",
+            "reserved",
+            "inactive",
+            "active",
+            "suspended",
+            "aborted ",
+            "terminated"
+          ]
+        },
+        "stateReason": {
+          "type": "string"
+        },
+        "supportingResource": {
+          "type": "array",
+          "description": "A list of supporting resources (SupportingResource [*]).Note: only Service of type RFS can be associated with Resources",
+          "items": {
+            "$ref": "#/definitions/ResourceRef"
+          }
+        },
+        "supportingService": {
+          "type": "array",
+          "description": "A list of supporting services (SupportingService [*]). A collection of services that support this service (bundling, link CFS to RFS)",
+          "items": {
+            "$ref": "#/definitions/ServiceRefOrValue"
+          }
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "Name of updated by user"
+        },
+        "updatedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date of update"
+        }
+      },
+      "title": "Service",
+      "description": "Service is a base class for defining the Service hierarchy. All Services are characterized as either being possibly visible and usable by a Customer or not. This gives rise to the two subclasses of Service: CustomerFacingService and ResourceFacingService."
+    },
+    "ServiceCreate": {
+      "type": "object",
+      "required": [
+        "serviceSpecification",
+        "state"
+      ],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Is it a customer facing or resource facing service"
+        },
+        "description": {
+          "type": "string",
+          "description": "Free-text description of the service"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the service ends"
+        },
+        "externalReference": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExternalReference"
+          }
+        },
+        "feature": {
+          "type": "array",
+          "description": "A list of feature associated with this service ",
+          "items": {
+            "$ref": "#/definitions/Feature"
+          }
+        },
+        "hasStarted": {
+          "type": "boolean",
+          "description": "If TRUE, this Service has already been started"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of a service entity."
+        },
+        "isBundle": {
+          "type": "boolean",
+          "description": "If true, the service is a ServiceBundle which regroup a service hierachy. If false, the service is a 'atomic' service (hierachy leaf)."
+        },
+        "isServiceEnabled": {
+          "type": "boolean",
+          "description": "If FALSE and hasStarted is FALSE, this particular Service has NOT been enabled for use - if FALSE and hasStarted is TRUE then the service has failed "
+        },
+        "isStateful": {
+          "type": "boolean",
+          "description": "If TRUE, this Service can be changed without affecting any other services"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the service"
+        },
+        "note": {
+          "type": "array",
+          "description": "A list of notes made on this service",
+          "items": {
+            "$ref": "#/definitions/Note"
+          }
+        },
+        "place": {
+          "type": "array",
+          "description": "A list of places (Place [*]). Used to define a place useful for the service (for example a geographical place whre the service is installed)",
+          "items": {
+            "$ref": "#/definitions/RelatedPlaceRefOrValue"
+          }
+        },
+        "relatedEntity": {
+          "type": "array",
+          "description": "A list of related  entity in relationship with this service ",
+          "items": {
+            "$ref": "#/definitions/RelatedEntityRefOrValue"
+          }
+        },
+        "relatedParty": {
+          "type": "array",
+          "description": "A list of related party references (RelatedParty [*]). A related party defines party or party role linked to a specific entity",
+          "items": {
+            "$ref": "#/definitions/RelatedParty"
+          }
+        },
+        "serviceCharacteristic": {
+          "type": "array",
+          "description": "A list of characteristics that characterize this service (ServiceCharacteristic [*]) ",
+          "items": {
+            "$ref": "#/definitions/Characteristic"
+          }
+        },
+        "serviceDate": {
+          "type": "string",
+          "description": "Date when the service was created (whatever its status)."
+        },
+        "serviceOrderItem": {
+          "type": "array",
+          "description": "A list of service order items related to this service",
+          "items": {
+            "$ref": "#/definitions/RelatedServiceOrderItem"
+          }
+        },
+        "serviceRelationship": {
+          "type": "array",
+          "description": "A list of service relationships (ServiceRelationship [*]). Describes links with other service(s) in the inventory.",
+          "items": {
+            "$ref": "#/definitions/ServiceRelationship"
+          }
+        },
+        "serviceSpecification": {
+          "description": "The specification from which this service was instantiated",
+          "$ref": "#/definitions/ServiceSpecificationRef"
+        },
+        "serviceType": {
+          "type": "string",
+          "description": "Business type of the service"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the service starts"
+        },
+        "startMode": {
+          "type": "string",
+          "description": "This attribute is an enumerated integer that indicates how the Service is started, such as: 0: Unknown; 1: Automatically by the managed environment; 2: Automatically by the owning device; 3: Manually by the Provider of the Service; 4: Manually by a Customer of the Provider; 5: Any of the above"
+        },
+        "state": {
+          "type": "string",
+          "description": "The life cycle state of the service, such as designed, reserved, active, etc...",
+          "enum": [
+            "created",
+            "pendingActive",
+            "cancelled",
+            "feasibilityChecked",
+            "pendingTerminate",
+            "designed",
+            "reserved",
+            "inactive",
+            "active",
+            "suspended",
+            "aborted ",
+            "terminated"
+          ]
+        },
+        "stateReason": {
+          "type": "string"
+        },
+        "supportingResource": {
+          "type": "array",
+          "description": "A list of supporting resources (SupportingResource [*]).Note: only Service of type RFS can be associated with Resources",
+          "items": {
+            "$ref": "#/definitions/ResourceRef"
+          }
+        },
+        "supportingService": {
+          "type": "array",
+          "description": "A list of supporting services (SupportingService [*]). A collection of services that support this service (bundling, link CFS to RFS)",
+          "items": {
+            "$ref": "#/definitions/ServiceRefOrValue"
+          }
+        }
+      },
+      "title": "ServiceCreate",
+      "description": "Service is a base class for defining the Service hierarchy. All Services are characterized as either being possibly visible and usable by a Customer or not. This gives rise to the two subclasses of Service: CustomerFacingService and ResourceFacingService. Skipped properties: id,href"
+    },
+    "ServiceRefOrValue": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@referredType": {
+          "type": "string",
+          "description": "The actual type of the target instance when needed for disambiguation."
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class Extensible name"
+        },
+        "category": {
+          "type": "string",
+          "description": "Is it a customer facing or resource facing service"
+        },
+        "description": {
+          "type": "string",
+          "description": "Free-text description of the service"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the service ends"
+        },
+        "feature": {
+          "type": "array",
+          "description": "A list of feature associated with this service ",
+          "items": {
+            "$ref": "#/definitions/Feature"
+          }
+        },
+        "hasStarted": {
+          "type": "boolean",
+          "description": "If TRUE, this Service has already been started"
+        },
+        "href": {
+          "type": "string",
+          "description": "Reference of the service"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the service"
+        },
+        "isBundle": {
+          "type": "boolean",
+          "description": "If true, the service is a ServiceBundle which regroup a service hierachy. If false, the service is a 'atomic' service (hierachy leaf)."
+        },
+        "isServiceEnabled": {
+          "type": "boolean",
+          "description": "If FALSE and hasStarted is FALSE, this particular Service has NOT been enabled for use - if FALSE and hasStarted is TRUE then the service has failed "
+        },
+        "isStateful": {
+          "type": "boolean",
+          "description": "If TRUE, this Service can be changed without affecting any other services"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the service"
+        },
+        "note": {
+          "type": "array",
+          "description": "A list of notes made on this service",
+          "items": {
+            "$ref": "#/definitions/Note"
+          }
+        },
+        "place": {
+          "type": "array",
+          "description": "A list of places (Place [*]). Used to define a place useful for the service (for example a geographical place whre the service is installed)",
+          "items": {
+            "$ref": "#/definitions/RelatedPlaceRefOrValue"
+          }
+        },
+        "relatedEntity": {
+          "type": "array",
+          "description": "A list of related  entity in relationship with this service ",
+          "items": {
+            "$ref": "#/definitions/RelatedEntityRefOrValue"
+          }
+        },
+        "relatedParty": {
+          "type": "array",
+          "description": "A list of related party references (RelatedParty [*]). A related party defines party or party role linked to a specific entity",
+          "items": {
+            "$ref": "#/definitions/RelatedParty"
+          }
+        },
+        "serviceCharacteristic": {
+          "type": "array",
+          "description": "A list of characteristics that characterize this service (ServiceCharacteristic [*]) ",
+          "items": {
+            "$ref": "#/definitions/Characteristic"
+          }
+        },
+        "serviceDate": {
+          "type": "string",
+          "description": "Date when the service was created (whatever its status)."
+        },
+        "serviceOrderItem": {
+          "type": "array",
+          "description": "A list of service order items related to this service",
+          "items": {
+            "$ref": "#/definitions/RelatedServiceOrderItem"
+          }
+        },
+        "serviceRelationship": {
+          "type": "array",
+          "description": "A list of service relationships (ServiceRelationship [*]). Describes links with other service(s) in the inventory.",
+          "items": {
+            "$ref": "#/definitions/ServiceRelationship"
+          }
+        },
+        "serviceSpecification": {
+          "description": "The specification from which this service was instantiated",
+          "$ref": "#/definitions/ServiceSpecificationRef"
+        },
+        "serviceType": {
+          "type": "string",
+          "description": "Business type of the service"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the service starts"
+        },
+        "startMode": {
+          "type": "string",
+          "description": "This attribute is an enumerated integer that indicates how the Service is started, such as: 0: Unknown; 1: Automatically by the managed environment; 2: Automatically by the owning device; 3: Manually by the Provider of the Service; 4: Manually by a Customer of the Provider; 5: Any of the above"
+        },
+        "state": {
+          "type": "string",
+          "description": "The life cycle state of the service, such as designed, reserved, active, etc...",
+          "enum": [
+            "created",
+            "pendingActive",
+            "cancelled",
+            "feasibilityChecked",
+            "pendingTerminate",
+            "designed",
+            "reserved",
+            "inactive",
+            "active",
+            "suspended",
+            "aborted",
+            "terminated"
+          ]
+        },
+        "stateReason": {
+          "type": "string"
+        },
+        "supportingResource": {
+          "type": "array",
+          "description": "A list of supporting resources (SupportingResource [*]).Note: only Service of type RFS can be associated with Resources",
+          "items": {
+            "$ref": "#/definitions/ResourceRef"
+          }
+        },
+        "supportingService": {
+          "type": "array",
+          "description": "A list of supporting services (SupportingService [*]). A collection of services that support this service (bundling, link CFS to RFS)",
+          "items": {
+            "$ref": "#/definitions/ServiceRefOrValue"
+          }
+        }
+      },
+      "title": "ServiceRefOrValue",
+      "description": "A Service to be created defined by value or existing defined by reference. The polymorphic attributes @type, @schemaLocation & @referredType are related to the Service entity and not the RelatedServiceRefOrValue class itself"
+    },
+    "ServiceRelationship": {
+      "type": "object",
+      "required": [
+        "relationshipType",
+        "service"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string"
+        },
+        "@schemaLocation": {
+          "type": "string"
+        },
+        "@type": {
+          "type": "string"
+        },
+        "relationshipType": {
+          "type": "string"
+        },
+        "service": {
+          "$ref": "#/definitions/ServiceRefOrValue"
+        },
+        "serviceRelationshipCharacteristic": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Characteristic"
+          }
+        }
+      },
+      "title": "ServiceRelationship"
+    },
+    "ServiceSpecificationRef": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@referredType": {
+          "type": "string",
+          "description": "The actual type of the target instance when needed for disambiguation."
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class Extensible name"
+        },
+        "href": {
+          "type": "string",
+          "description": "Hyperlink reference"
+        },
+        "id": {
+          "type": "string",
+          "description": "unique identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the related entity."
+        },
+        "version": {
+          "type": "string",
+          "description": "Service specification version"
+        }
+      },
+      "title": "ServiceSpecificationRef",
+      "description": "Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification."
+    },
+    "ServiceUpdate": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Is it a customer facing or resource facing service"
+        },
+        "description": {
+          "type": "string",
+          "description": "Free-text description of the service"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the service ends"
+        },
+        "externalReference": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExternalReference"
+          }
+        },
+        "feature": {
+          "type": "array",
+          "description": "A list of feature associated with this service ",
+          "items": {
+            "$ref": "#/definitions/Feature"
+          }
+        },
+        "hasStarted": {
+          "type": "boolean",
+          "description": "If TRUE, this Service has already been started"
+        },
+        "isBundle": {
+          "type": "boolean",
+          "description": "If true, the service is a ServiceBundle which regroup a service hierachy. If false, the service is a 'atomic' service (hierachy leaf)."
+        },
+        "isServiceEnabled": {
+          "type": "boolean",
+          "description": "If FALSE and hasStarted is FALSE, this particular Service has NOT been enabled for use - if FALSE and hasStarted is TRUE then the service has failed "
+        },
+        "isStateful": {
+          "type": "boolean",
+          "description": "If TRUE, this Service can be changed without affecting any other services"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the service"
+        },
+        "note": {
+          "type": "array",
+          "description": "A list of notes made on this service",
+          "items": {
+            "$ref": "#/definitions/Note"
+          }
+        },
+        "place": {
+          "type": "array",
+          "description": "A list of places (Place [*]). Used to define a place useful for the service (for example a geographical place whre the service is installed)",
+          "items": {
+            "$ref": "#/definitions/RelatedPlaceRefOrValue"
+          }
+        },
+        "relatedEntity": {
+          "type": "array",
+          "description": "A list of related  entity in relationship with this service ",
+          "items": {
+            "$ref": "#/definitions/RelatedEntityRefOrValue"
+          }
+        },
+        "relatedParty": {
+          "type": "array",
+          "description": "A list of related party references (RelatedParty [*]). A related party defines party or party role linked to a specific entity",
+          "items": {
+            "$ref": "#/definitions/RelatedParty"
+          }
+        },
+        "serviceCharacteristic": {
+          "type": "array",
+          "description": "A list of characteristics that characterize this service (ServiceCharacteristic [*]) ",
+          "items": {
+            "$ref": "#/definitions/Characteristic"
+          }
+        },
+        "serviceOrderItem": {
+          "type": "array",
+          "description": "A list of service order items related to this service",
+          "items": {
+            "$ref": "#/definitions/RelatedServiceOrderItem"
+          }
+        },
+        "serviceRelationship": {
+          "type": "array",
+          "description": "A list of service relationships (ServiceRelationship [*]). Describes links with other service(s) in the inventory.",
+          "items": {
+            "$ref": "#/definitions/ServiceRelationship"
+          }
+        },
+        "serviceSpecification": {
+          "description": "The specification from which this service was instantiated",
+          "$ref": "#/definitions/ServiceSpecificationRef"
+        },
+        "serviceType": {
+          "type": "string",
+          "description": "Business type of the service"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the service starts"
+        },
+        "startMode": {
+          "type": "string",
+          "description": "This attribute is an enumerated integer that indicates how the Service is started, such as: 0: Unknown; 1: Automatically by the managed environment; 2: Automatically by the owning device; 3: Manually by the Provider of the Service; 4: Manually by a Customer of the Provider; 5: Any of the above"
+        },
+        "state": {
+          "type": "string",
+          "description": "The life cycle state of the service, such as designed, reserved, active, etc...",
+          "enum": [
+            "created",
+            "pendingActive",
+            "cancelled",
+            "feasibilityChecked",
+            "pendingTerminate",
+            "designed",
+            "reserved",
+            "inactive",
+            "active",
+            "suspended",
+            "aborted",
+            "terminated"
+          ]
+        },
+        "stateReason": {
+          "type": "string"
+        },
+        "supportingResource": {
+          "type": "array",
+          "description": "A list of supporting resources (SupportingResource [*]).Note: only Service of type RFS can be associated with Resources",
+          "items": {
+            "$ref": "#/definitions/ResourceRef"
+          }
+        },
+        "supportingService": {
+          "type": "array",
+          "description": "A list of supporting services (SupportingService [*]). A collection of services that support this service (bundling, link CFS to RFS)",
+          "items": {
+            "$ref": "#/definitions/ServiceRefOrValue"
+          }
+        }
+      },
+      "title": "ServiceUpdate",
+      "description": "Service is a base class for defining the Service hierarchy. All Services are characterized as either being possibly visible and usable by a Customer or not. This gives rise to the two subclasses of Service: CustomerFacingService and ResourceFacingService. Skipped properties: id,href,serviceDate"
+    },
+    "TimePeriod": {
+      "type": "object",
+      "properties": {
+        "endDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.52Z",
+          "description": "End of the time period, using IETC-RFC-3339 format"
+        },
+        "startDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.52Z",
+          "description": "Start of the time period, using IETC-RFC-3339 format"
+        }
+      },
+      "title": "TimePeriod",
+      "description": "A period of time, either as a deadline (endDateTime only) a startDateTime only, or both"
+    }
+  }
+}

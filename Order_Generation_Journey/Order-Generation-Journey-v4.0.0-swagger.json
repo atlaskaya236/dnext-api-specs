@@ -1,0 +1,882 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The Order Generation Journey API",
+    "version": "4.0.0",
+    "title": "Order Generation Journey",
+    "contact": {
+      "name": "PiA(people in action)",
+      "url": "http://www.pia-team.com/",
+      "email": "info@pia-team.com"
+    }
+  },
+  "basePath": "/api/orderGenerationJourney/v1",
+  "tags": [
+    {
+      "name": "orderGeneration",
+      "description": "Order Generation Api Controller"
+    }
+  ],
+  "paths": {
+    "/orderGeneration": {
+      "get": {
+        "tags": [
+          "orderGeneration"
+        ],
+        "summary": "List OrderGeneration objects",
+        "description": "This operation list OrderGeneration entities",
+        "operationId": "listOrderGeneration",
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Comma-separated properties to be provided in response",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Requested number of resources to be provided in response",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Requested index for start of resources to be provided in response",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated properties to sort fields in response",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderGeneration"
+              }
+            }
+          },
+          "206": {
+            "description": "Partial Content",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderGeneration"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "orderGeneration"
+        ],
+        "summary": "Creates OrderGenerations",
+        "description": "This operation creates OrderGeneration entity list.",
+        "operationId": "createOrderGeneration",
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The OrderGenerations to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderGenerationCreateList"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OrderGeneration"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderGeneration"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/orderGeneration/{id}": {
+      "get": {
+        "tags": [
+          "orderGeneration"
+        ],
+        "summary": "Retrieves a OrderGeneration by ID",
+        "description": "This operation retrieves a OrderGeneration entity. Attribute selection is enabled for all first level attributes.",
+        "operationId": "retrieveOrderGeneration",
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Comma-separated properties to provide in response",
+            "required": false,
+            "type": "string",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the OrderGeneration",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OrderGeneration"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "orderGeneration"
+        ],
+        "summary": "Deletes a OrderGeneration",
+        "description": "This operation deletes a OrderGeneration entity.",
+        "operationId": "deleteOrderGeneration",
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the OrderGeneration",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Deleted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "patch": {
+        "tags": [
+          "orderGeneration"
+        ],
+        "summary": "Partially updates a OrderGeneration",
+        "description": "This operation partially updates a OrderGeneration entity.",
+        "operationId": "patchOrderGeneration_1",
+        "consumes": [
+          "application/merge-patch+json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the OrderGeneration",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "orderGenerationUpdate",
+            "description": "The OrderGeneration to be updated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderGeneration_Update"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "schema": {
+              "$ref": "#/definitions/OrderGeneration"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "405": {
+            "description": "Method Not allowed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "Error": {
+      "type": "object",
+      "properties": {
+        "baseType": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "referenceError": {
+          "type": "string"
+        },
+        "schemaLocation": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "title": "Error"
+    },
+    "OrderGeneration": {
+      "type": "object",
+      "required": [
+        "actionType",
+        "productOrder",
+        "relatedEntity"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class entity name"
+        },
+        "actionType": {
+          "type": "string",
+          "description": "Action type of the order generation resource",
+          "enum": [
+            "add",
+            "statusChange",
+            "statusChange.Suspend",
+            "statusChange.Resume",
+            "modify",
+            "modify.Migration",
+            "modify.Relocation",
+            "delete"
+          ]
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Name of created by user"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date of creation"
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the order generation"
+        },
+        "href": {
+          "type": "string",
+          "description": "An URI used to access to the order generation resource"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the Order Generation"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the order generation"
+        },
+        "productOrder": {
+          "description": "Product Order",
+          "$ref": "#/definitions/ProductOrderRef"
+        },
+        "relatedEntity": {
+          "description": "Reference to the related entity",
+          "$ref": "#/definitions/RelatedEntityRef"
+        },
+        "requestedCompletionDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.523Z",
+          "description": "Requested completion date of the order generation"
+        },
+        "requestedStartDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.523Z",
+          "description": "Requested start date of the order generation"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Version number of the entity"
+        },
+        "statusType": {
+          "type": "string",
+          "description": "Status type of the order generation resource",
+          "enum": [
+            "Acknowledged",
+            "Active",
+            "Submitted",
+            "Cancelled",
+            "Rejected"
+          ]
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "Name of updated by user"
+        },
+        "updatedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date of update"
+        },
+        "validFor": {
+          "description": "The period for which this REST resource is valid",
+          "$ref": "#/definitions/TimePeriod"
+        },
+        "version": {
+          "type": "string",
+          "description": "An URI used to access to the order generation resource"
+        }
+      },
+      "title": "OrderGeneration",
+      "description": "This resource is used to manage order generation request and response"
+    },
+    "OrderGenerationCreateList": {
+      "type": "object",
+      "required": [
+        "orderGeneration"
+      ],
+      "properties": {
+        "orderGeneration": {
+          "type": "array",
+          "description": "Order Generation Create List",
+          "items": {
+            "$ref": "#/definitions/OrderGeneration_Create"
+          }
+        }
+      },
+      "title": "OrderGenerationCreateList",
+      "description": "This resource is used to manage order generation request and response"
+    },
+    "OrderGeneration_Create": {
+      "type": "object",
+      "required": [
+        "actionType",
+        "relatedEntity"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class entity name"
+        },
+        "actionType": {
+          "type": "string",
+          "description": "Action type of the order generation resource",
+          "enum": [
+            "add",
+            "statusChange",
+            "statusChange.Suspend",
+            "statusChange.Resume",
+            "modify",
+            "modify.Migration",
+            "modify.Relocation",
+            "delete"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the order generation"
+        },
+        "href": {
+          "type": "string",
+          "description": "An URI used to access to the order generation resource"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the Order Generation"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the order generation"
+        },
+        "relatedEntity": {
+          "description": "Reference to the related entity",
+          "$ref": "#/definitions/RelatedEntityRef"
+        },
+        "requestedCompletionDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.523Z",
+          "description": "Requested completion date of the order generation"
+        },
+        "requestedStartDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.523Z",
+          "description": "Requested start date of the order generation"
+        },
+        "statusType": {
+          "type": "string",
+          "description": "Status type of the order generation resource",
+          "enum": [
+            "Acknowledged",
+            "Active",
+            "Submitted",
+            "Cancelled",
+            "Rejected"
+          ]
+        },
+        "validFor": {
+          "description": "The period for which this REST resource is valid",
+          "$ref": "#/definitions/TimePeriod"
+        },
+        "version": {
+          "type": "string",
+          "description": "An URI used to access to the order generation resource"
+        }
+      },
+      "title": "OrderGeneration_Create",
+      "description": "This resource is used to manage order generation request and response"
+    },
+    "OrderGeneration_Update": {
+      "type": "object",
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class entity name"
+        },
+        "actionType": {
+          "type": "string",
+          "description": "Action type of the order generation resource",
+          "enum": [
+            "add",
+            "statusChange",
+            "statusChange.Suspend",
+            "statusChange.Resume",
+            "modify",
+            "modify.Migration",
+            "modify.Relocation",
+            "delete"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the order generation"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the order generation"
+        },
+        "requestedCompletionDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.523Z",
+          "description": "Requested completion date of the order generation"
+        },
+        "requestedStartDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.523Z",
+          "description": "Requested start date of the order generation"
+        },
+        "statusType": {
+          "type": "string",
+          "description": "Status type of the order generation resource",
+          "enum": [
+            "Acknowledged",
+            "Active",
+            "Submitted",
+            "Cancelled",
+            "Rejected"
+          ]
+        },
+        "validFor": {
+          "description": "The period for which this REST resource is valid",
+          "$ref": "#/definitions/TimePeriod"
+        },
+        "version": {
+          "type": "string",
+          "description": "An URI used to access to the order generation resource"
+        }
+      },
+      "title": "OrderGeneration_Update",
+      "description": "This resource is used to manage order generation request and response Skipped properties: id,href"
+    },
+    "ProductOrderRef": {
+      "type": "object",
+      "required": [
+        "@referredType"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@referredType": {
+          "type": "string",
+          "description": "The actual type of the target instance when needed for disambiguation.",
+          "enum": [
+            "Shopping Cart",
+            "Quote",
+            "Product",
+            "Billing Account",
+            "Agreement"
+          ]
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class entity name"
+        },
+        "href": {
+          "type": "string",
+          "description": "An URI used to access to the product order resource"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the product order"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the product order resource"
+        }
+      },
+      "title": "ProductOrderRef"
+    },
+    "RelatedEntityRef": {
+      "type": "object",
+      "required": [
+        "@referredType"
+      ],
+      "properties": {
+        "@baseType": {
+          "type": "string",
+          "description": "When sub-classing, this defines the super-class"
+        },
+        "@referredType": {
+          "type": "string",
+          "description": "The actual type of the target instance when needed for disambiguation.",
+          "enum": [
+            "Shopping Cart",
+            "Quote",
+            "Product",
+            "Billing Account",
+            "Agreement"
+          ]
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+        },
+        "@type": {
+          "type": "string",
+          "description": "When sub-classing, this defines the sub-class entity name"
+        },
+        "href": {
+          "type": "string",
+          "description": "An URI used to access to the related entity resource"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the related entity"
+        }
+      },
+      "title": "RelatedEntityRef"
+    },
+    "TimePeriod": {
+      "type": "object",
+      "properties": {
+        "endDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.523Z",
+          "description": "End of the time period, using IETC-RFC-3339 format"
+        },
+        "startDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1985-04-12T23:20:50.523Z",
+          "description": "Start of the time period, using IETC-RFC-3339 format"
+        }
+      },
+      "title": "TimePeriod",
+      "description": "A period of time, either as a deadline (endDateTime only) a startDateTime only, or both"
+    }
+  }
+}

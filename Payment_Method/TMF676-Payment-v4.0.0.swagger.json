@@ -1,0 +1,2030 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "TMF 676 - Payment\n\nThis API provides the standardized client interface to Payment Systems for managing performed payments or refunds. Examples of Payment API originators (clients) include Web servers, mobile app servers, Contact center dashboards or retail store systems",
+        "version": "4.0.0",
+        "title": "Payment Method",
+        "contact": {
+            "name": "PiA(people in action)",
+            "url": "http://www.pia-team.com/",
+            "email": "info@pia-team.com"
+        }
+    },
+    "basePath": "/api/payment/v4",
+    "tags": [
+        {
+            "name": "events subscription",
+            "description": "Hub Api Controller"
+        },
+        {
+            "name": "payment",
+            "description": "Payment Api Controller"
+        },
+        {
+            "name": "refund",
+            "description": "Refund Api Controller"
+        }
+    ],
+    "paths": {
+        "/hub": {
+            "post": {
+                "tags": [
+                    "events subscription"
+                ],
+                "summary": "Register a listener",
+                "description": "Sets the communication endpoint address the service instance must use to deliver information about its health state, execution state, failures and metrics.",
+                "operationId": "registerListener",
+                "consumes": [
+                    "application/json;charset=utf-8"
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Data containing the callback endpoint to deliver the information",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/EventSubscriptionInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/EventSubscription"
+                        }
+                    },
+                    "201": {
+                        "description": "Subscribed",
+                        "schema": {
+                            "$ref": "#/definitions/EventSubscription"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/hub/{id}": {
+            "delete": {
+                "tags": [
+                    "events subscription"
+                ],
+                "summary": "Unregister a listener",
+                "description": "Resets the communication endpoint address the service instance must use to deliver information about its health state, execution state, failures and metrics.",
+                "operationId": "unregisterListener",
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the registered listener",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/payment": {
+            "get": {
+                "tags": [
+                    "payment"
+                ],
+                "summary": "List or find Payment objects",
+                "description": "This operation list or find Payment entities",
+                "operationId": "listPayment",
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "description": "Comma-separated properties to be provided in response",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Requested number of resources to be provided in response",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Requested index for start of resources to be provided in response",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort field of resources to be provided in response",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Payment"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Creates a Payment",
+                "description": "This operation creates a Payment entity.",
+                "operationId": "createPayment",
+                "consumes": [
+                    "application/json;charset=utf-8"
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "paymentCreate",
+                        "description": "The Payment to be created",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Payment_Create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Payment"
+                        }
+                    },
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/Payment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/payment/{id}": {
+            "get": {
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Retrieves a Payment by ID",
+                "description": "This operation retrieves a Payment entity. Attribute selection is enabled for all first level attributes.",
+                "operationId": "retrievePayment",
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifier of the Payment",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Payment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Deletes a Payment",
+                "description": "This operation deletes a Payment entity.",
+                "operationId": "deletePayment",
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifier of the Payment",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "patch": {
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Partially updates a Payment",
+                "description": "This operation partially updates a Payment entity.",
+                "operationId": "patchPayment_1",
+                "consumes": [
+                    "application/merge-patch+json;charset=utf-8"
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifier of the Payment",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "paymentUpdate",
+                        "description": "The Payment to be updated",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Payment_Update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "schema": {
+                            "$ref": "#/definitions/Payment"
+                        }
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/refund": {
+            "get": {
+                "tags": [
+                    "refund"
+                ],
+                "summary": "List or find Refund objects",
+                "description": "This operation list or find Refund entities",
+                "operationId": "listRefund",
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "description": "Comma-separated properties to be provided in response",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Requested number of resources to be provided in response",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Requested index for start of resources to be provided in response",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort field of resources to be provided in response",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Refund"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": [
+                    "refund"
+                ],
+                "summary": "Creates a Refund",
+                "description": "This operation creates a Refund entity.",
+                "operationId": "createRefund",
+                "consumes": [
+                    "application/json;charset=utf-8"
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "refundCreate",
+                        "description": "The Refund to be created",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Refund_Create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Refund"
+                        }
+                    },
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/Refund"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/refund/{id}": {
+            "get": {
+                "tags": [
+                    "refund"
+                ],
+                "summary": "Retrieves a Refund by ID",
+                "description": "This operation retrieves a Refund entity. Attribute selection is enabled for all first level attributes.",
+                "operationId": "retrieveRefund",
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifier of the Refund",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Refund"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "tags": [
+                    "refund"
+                ],
+                "summary": "Deletes a Refund",
+                "description": "This operation deletes a Refund entity.",
+                "operationId": "deleteRefund",
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifier of the Refund",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "patch": {
+                "tags": [
+                    "refund"
+                ],
+                "summary": "Partially updates a Refund",
+                "description": "This operation partially updates a Refund entity.",
+                "operationId": "patchRefund_1",
+                "consumes": [
+                    "application/merge-patch+json;charset=utf-8"
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifier of the Refund",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "refundUpdate",
+                        "description": "The Refund to be updated",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Refund_Update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "schema": {
+                            "$ref": "#/definitions/Refund"
+                        }
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "definitions": {
+        "AccountRef": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@referredType": {
+                    "type": "string",
+                    "description": "The actual type of the target instance when needed for disambiguation."
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the sub-class Extensible name"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Detailed description of the account"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Reference of the account"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of the account"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the account"
+                }
+            },
+            "title": "AccountRef",
+            "description": "Account reference. A account may be a party account or a financial account."
+        },
+        "ChannelRef": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@referredType": {
+                    "type": "string",
+                    "description": "The actual type of the target instance when needed for disambiguation."
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the sub-class Extensible name"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Reference of the related entity."
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of a related entity."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the channel."
+                }
+            },
+            "title": "ChannelRef",
+            "description": "The channel to which the resource reference to. e.g. channel for selling product offerings, channel for opening a trouble ticket etc.."
+        },
+        "Characteristic": {
+            "type": "object",
+            "required": [
+                "name",
+                "value"
+            ],
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the sub-class entity name"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the characteristic"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "The value of the characteristic"
+                },
+                "valueType": {
+                    "type": "string",
+                    "description": "Data type of the value of the characteristic"
+                }
+            },
+            "title": "Characteristic",
+            "description": "Describes a given characteristic of an object or entity through a name/value pair."
+        },
+        "EntityRef": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@referredType": {
+                    "type": "string",
+                    "description": "The actual type of the target instance when needed for disambiguation."
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the sub-class Extensible name"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Reference of the related entity."
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of a related entity."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the related entity."
+                }
+            },
+            "title": "EntityRef",
+            "description": "Entity reference schema to be use for all entityRef class."
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "baseType": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "referenceError": {
+                    "type": "string"
+                },
+                "schemaLocation": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "title": "Error"
+        },
+        "EventSubscription": {
+            "type": "object",
+            "required": [
+                "callback",
+                "id"
+            ],
+            "properties": {
+                "revision": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Version number of the entity"
+                },
+                "callback": {
+                    "type": "string",
+                    "description": "The callback being registered."
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Id of the listener"
+                },
+                "query": {
+                    "type": "string",
+                    "description": "additional data to be passed"
+                },
+                "createdDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date of creation"
+                },
+                "updatedDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date of update"
+                },
+                "createdBy": {
+                    "type": "string",
+                    "description": "Name of created by user"
+                },
+                "updatedBy": {
+                    "type": "string",
+                    "description": "Name of updated by user"
+                }
+            },
+            "title": "EventSubscription",
+            "description": "Sets the communication endpoint address the service instance must use to deliver notification information"
+        },
+        "EventSubscriptionInput": {
+            "type": "object",
+            "required": [
+                "callback"
+            ],
+            "properties": {
+                "callback": {
+                    "type": "string",
+                    "description": "The callback being registered."
+                },
+                "query": {
+                    "type": "string",
+                    "description": "additional data to be passed"
+                }
+            },
+            "title": "EventSubscriptionInput",
+            "description": "Sets the communication endpoint address the service instance must use to deliver notification information"
+        },
+        "Money": {
+            "type": "object",
+            "required": [
+                "unit",
+                "value"
+            ],
+            "properties": {
+                "unit": {
+                    "type": "string",
+                    "description": "Currency (ISO4217 norm uses 3 letters to define the currency)"
+                },
+                "value": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "A positive floating point number"
+                }
+            },
+            "title": "Money",
+            "description": "A base / value business entity used to represent money"
+        },
+        "Payment": {
+            "type": "object",
+            "required": [
+                "account",
+                "paymentMethod",
+                "totalAmount"
+            ],
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the sub-class entity name"
+                },
+                "account": {
+                    "$ref": "#/definitions/AccountRef"
+                },
+                "amount": {
+                    "description": "Amount to be paid (net of taxes)",
+                    "$ref": "#/definitions/Money"
+                },
+                "authorizationCode": {
+                    "type": "string",
+                    "description": "Authorization code retrieved from an external payment gateway that could be used for conciliation"
+                },
+                "channel": {
+                    "$ref": "#/definitions/ChannelRef"
+                },
+                "characteristic": {
+                    "type": "array",
+                    "description": "A list of characteristics",
+                    "items": {
+                        "$ref": "#/definitions/Characteristic"
+                    }
+                },
+                "correlatorId": {
+                    "type": "string",
+                    "description": "Unique identifier in the client for the payment in case it is needed to correlate"
+                },
+                "createdBy": {
+                    "type": "string",
+                    "description": "Name of created by user"
+                },
+                "createdDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date of creation"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Text describing the contents of the payment"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Hypertext Reference of the Payment"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of Payment"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Screen name of the payment"
+                },
+                "payer": {
+                    "$ref": "#/definitions/RelatedParty"
+                },
+                "paymentDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the payment was performed"
+                },
+                "paymentItem": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PaymentItem"
+                    }
+                },
+                "paymentMethod": {
+                    "$ref": "#/definitions/PaymentMethodRefOrValue"
+                },
+                "revision": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Version number of the entity"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status of the payment"
+                },
+                "statusDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the status was recorded"
+                },
+                "taxAmount": {
+                    "description": "Tax applied",
+                    "$ref": "#/definitions/Money"
+                },
+                "totalAmount": {
+                    "description": "Amount to be paid (including taxes)",
+                    "$ref": "#/definitions/Money"
+                },
+                "updatedBy": {
+                    "type": "string",
+                    "description": "Name of updated by user"
+                },
+                "updatedDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date of update"
+                }
+            },
+            "title": "Payment",
+            "description": "The Payment resource represents a performed payment. It contains both information about the payment and the payment method used to perform it."
+        },
+        "PaymentItem": {
+            "type": "object",
+            "required": [
+                "item"
+            ],
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "example": "Document",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "example": "https://serverRoot/api/documentManagement/v4/characteristic",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "example": "Characteristic",
+                    "description": "When sub-classing, this defines the sub-class entity name"
+                },
+                "amount": {
+                    "description": "Amount to be paid (net of taxes)",
+                    "$ref": "#/definitions/Money"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of the payment Item"
+                },
+                "item": {
+                    "$ref": "#/definitions/EntityRef"
+                },
+                "taxAmount": {
+                    "description": "Tax applied",
+                    "$ref": "#/definitions/Money"
+                },
+                "totalAmount": {
+                    "description": "Amount to be paid (including taxes)",
+                    "$ref": "#/definitions/Money"
+                }
+            },
+            "title": "PaymentItem",
+            "description": "The paymentItem is the result of lettering process. It enables to assign automatically or manually part of incoming payment amount to a bill"
+        },
+        "PaymentMethodRefOrValue": {
+            "type": "object",
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@referredType": {
+                    "type": "string",
+                    "description": "The actual type of the target instance when needed for disambiguation."
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the sub-class Extensible name"
+                },
+                "account": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AccountRef"
+                    }
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Text describing the contents of the payment method"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "A resource URI pointing to the resource in the server that stores the detailed information. This is typically the resource url to retrieve individual details for the specific payment method"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique Identifier within the server for the payment method."
+                },
+                "isPreferred": {
+                    "type": "boolean",
+                    "description": "If the method is the preferred one by the owner. Typically used when querying for the payment methods of a specific customer or account"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Friendly name assigned to the payment method"
+                },
+                "relatedParty": {
+                    "$ref": "#/definitions/RelatedParty"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "statusDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "validFor": {
+                    "description": "Date interval in which the payment method is valid",
+                    "$ref": "#/definitions/TimePeriod"
+                }
+            },
+            "title": "PaymentMethodRefOrValue",
+            "description": "link to the resource that holds information about the payment mean used to complete the operation"
+        },
+        "PaymentRef": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@referredType": {
+                    "type": "string",
+                    "description": "The actual type of the target instance when needed for disambiguation."
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the sub-class Extensible name"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Reference of the related entity."
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of a related entity."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "A name for the payment"
+                }
+            },
+            "title": "PaymentRef",
+            "description": "If an immediate payment has been done at the product order submission, the payment information are captured and stored (as a reference) in the order."
+        },
+        "Payment_Create": {
+            "type": "object",
+            "required": [
+                "account",
+                "paymentMethod",
+                "totalAmount"
+            ],
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/AccountRef"
+                },
+                "amount": {
+                    "description": "Amount to be paid (net of taxes)",
+                    "$ref": "#/definitions/Money"
+                },
+                "authorizationCode": {
+                    "type": "string",
+                    "description": "Authorization code retrieved from an external payment gateway that could be used for conciliation"
+                },
+                "channel": {
+                    "$ref": "#/definitions/ChannelRef"
+                },
+                "characteristic": {
+                    "type": "array",
+                    "description": "A list of characteristics",
+                    "items": {
+                        "$ref": "#/definitions/Characteristic"
+                    }
+                },
+                "correlatorId": {
+                    "type": "string",
+                    "description": "Unique identifier in the client for the payment in case it is needed to correlate"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Text describing the contents of the payment"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of Payment"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Screen name of the payment"
+                },
+                "payer": {
+                    "$ref": "#/definitions/RelatedParty"
+                },
+                "paymentDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the payment was performed"
+                },
+                "paymentItem": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PaymentItem"
+                    }
+                },
+                "paymentMethod": {
+                    "$ref": "#/definitions/PaymentMethodRefOrValue"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status of the payment"
+                },
+                "statusDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the status was recorded"
+                },
+                "taxAmount": {
+                    "description": "Tax applied",
+                    "$ref": "#/definitions/Money"
+                },
+                "totalAmount": {
+                    "description": "Amount to be paid (including taxes)",
+                    "$ref": "#/definitions/Money"
+                }
+            },
+            "title": "Payment_Create",
+            "description": "The Payment resource represents a performed payment. It contains both information about the payment and the payment method used to perform it. Skipped properties: id,href,status,statusDate,paymentDate"
+        },
+        "Payment_Update": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/AccountRef"
+                },
+                "amount": {
+                    "description": "Amount to be paid (net of taxes)",
+                    "$ref": "#/definitions/Money"
+                },
+                "authorizationCode": {
+                    "type": "string",
+                    "description": "Authorization code retrieved from an external payment gateway that could be used for conciliation"
+                },
+                "channel": {
+                    "$ref": "#/definitions/ChannelRef"
+                },
+                "characteristic": {
+                    "type": "array",
+                    "description": "A list of characteristics",
+                    "items": {
+                        "$ref": "#/definitions/Characteristic"
+                    }
+                },
+                "correlatorId": {
+                    "type": "string",
+                    "description": "Unique identifier in the client for the payment in case it is needed to correlate"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Text describing the contents of the payment"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Screen name of the payment"
+                },
+                "payer": {
+                    "$ref": "#/definitions/RelatedParty"
+                },
+                "paymentDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the payment was performed"
+                },
+                "paymentItem": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PaymentItem"
+                    }
+                },
+                "paymentMethod": {
+                    "$ref": "#/definitions/PaymentMethodRefOrValue"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status of the payment"
+                },
+                "statusDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the status was recorded"
+                },
+                "taxAmount": {
+                    "description": "Tax applied",
+                    "$ref": "#/definitions/Money"
+                },
+                "totalAmount": {
+                    "description": "Amount to be paid (including taxes)",
+                    "$ref": "#/definitions/Money"
+                }
+            },
+            "title": "Payment_Update",
+            "description": "The Payment resource represents a performed payment. It contains both information about the payment and the payment method used to perform it. Skipped properties: id,href,status,statusDate,paymentDate"
+        },
+        "Refund": {
+            "type": "object",
+            "required": [
+                "account",
+                "paymentMethod",
+                "totalAmount"
+            ],
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the sub-class entity name"
+                },
+                "account": {
+                    "$ref": "#/definitions/AccountRef"
+                },
+                "amount": {
+                    "description": "Amount to be refunded (net of taxes)",
+                    "$ref": "#/definitions/Money"
+                },
+                "authorizationCode": {
+                    "type": "string",
+                    "description": "Authorization code retrieved from an external payment gateway that could be used for conciliation"
+                },
+                "channel": {
+                    "$ref": "#/definitions/ChannelRef"
+                },
+                "characteristic": {
+                    "type": "array",
+                    "description": "A list of characteristics",
+                    "items": {
+                        "$ref": "#/definitions/Characteristic"
+                    }
+                },
+                "correlatorId": {
+                    "type": "string",
+                    "description": "Unique identifier in the client for the refund in case it is needed to correlate"
+                },
+                "createdBy": {
+                    "type": "string",
+                    "description": "Name of created by user"
+                },
+                "createdDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date of creation"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Text describing the contents of the refund"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Hypertext Reference of the refund"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of Refund"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Screen name of the refund"
+                },
+                "payment": {
+                    "$ref": "#/definitions/PaymentRef"
+                },
+                "paymentMethod": {
+                    "$ref": "#/definitions/PaymentMethodRefOrValue"
+                },
+                "refundDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the refund was performed"
+                },
+                "requestor": {
+                    "$ref": "#/definitions/RelatedParty"
+                },
+                "revision": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Version number of the entity"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status of the refund"
+                },
+                "statusDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the status was recorded"
+                },
+                "taxAmount": {
+                    "description": "Tax applied",
+                    "$ref": "#/definitions/Money"
+                },
+                "totalAmount": {
+                    "description": "Amount to be paid (including taxes)",
+                    "$ref": "#/definitions/Money"
+                },
+                "updatedBy": {
+                    "type": "string",
+                    "description": "Name of updated by user"
+                },
+                "updatedDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date of update"
+                }
+            },
+            "title": "Refund",
+            "description": "The Refund resource represents a performed Refund. It contains both information about the refund and the payment method used to perform it."
+        },
+        "Refund_Create": {
+            "type": "object",
+            "required": [
+                "account",
+                "paymentMethod",
+                "totalAmount"
+            ],
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/AccountRef"
+                },
+                "amount": {
+                    "description": "Amount to be refunded (net of taxes)",
+                    "$ref": "#/definitions/Money"
+                },
+                "authorizationCode": {
+                    "type": "string",
+                    "description": "Authorization code retrieved from an external payment gateway that could be used for conciliation"
+                },
+                "channel": {
+                    "$ref": "#/definitions/ChannelRef"
+                },
+                "characteristic": {
+                    "type": "array",
+                    "description": "A list of characteristics",
+                    "items": {
+                        "$ref": "#/definitions/Characteristic"
+                    }
+                },
+                "correlatorId": {
+                    "type": "string",
+                    "description": "Unique identifier in the client for the refund in case it is needed to correlate"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Text describing the contents of the refund"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of Payment"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Screen name of the refund"
+                },
+                "payment": {
+                    "$ref": "#/definitions/PaymentRef"
+                },
+                "paymentMethod": {
+                    "$ref": "#/definitions/PaymentMethodRefOrValue"
+                },
+                "refundDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the refund was performed"
+                },
+                "requestor": {
+                    "$ref": "#/definitions/RelatedParty"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status of the refund"
+                },
+                "statusDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the status was recorded"
+                },
+                "taxAmount": {
+                    "description": "Tax applied",
+                    "$ref": "#/definitions/Money"
+                },
+                "totalAmount": {
+                    "description": "Amount to be paid (including taxes)",
+                    "$ref": "#/definitions/Money"
+                }
+            },
+            "title": "Refund_Create",
+            "description": "The Refund resource represents a performed Refund. It contains both information about the refund and the payment method used to perform it. Skipped properties: id,href,status,statusDate,RefundDate"
+        },
+        "Refund_Update": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/AccountRef"
+                },
+                "amount": {
+                    "description": "Amount to be refunded (net of taxes)",
+                    "$ref": "#/definitions/Money"
+                },
+                "authorizationCode": {
+                    "type": "string",
+                    "description": "Authorization code retrieved from an external payment gateway that could be used for conciliation"
+                },
+                "channel": {
+                    "$ref": "#/definitions/ChannelRef"
+                },
+                "characteristic": {
+                    "type": "array",
+                    "description": "A list of characteristics",
+                    "items": {
+                        "$ref": "#/definitions/Characteristic"
+                    }
+                },
+                "correlatorId": {
+                    "type": "string",
+                    "description": "Unique identifier in the client for the refund in case it is needed to correlate"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Text describing the contents of the refund"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Screen name of the refund"
+                },
+                "payment": {
+                    "$ref": "#/definitions/PaymentRef"
+                },
+                "paymentMethod": {
+                    "$ref": "#/definitions/PaymentMethodRefOrValue"
+                },
+                "refundDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the refund was performed"
+                },
+                "requestor": {
+                    "$ref": "#/definitions/RelatedParty"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status of the refund"
+                },
+                "statusDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the status was recorded"
+                },
+                "taxAmount": {
+                    "description": "Tax applied",
+                    "$ref": "#/definitions/Money"
+                },
+                "totalAmount": {
+                    "description": "Amount to be paid (including taxes)",
+                    "$ref": "#/definitions/Money"
+                }
+            },
+            "title": "Refund_Update",
+            "description": "The Refund resource represents a performed Refund. It contains both information about the refund and the payment method used to perform it. Skipped properties: id,href,status,statusDate,RefundDate"
+        },
+        "RelatedParty": {
+            "type": "object",
+            "required": [
+                "@referredType",
+                "id"
+            ],
+            "properties": {
+                "@baseType": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the super-class"
+                },
+                "@referredType": {
+                    "type": "string",
+                    "description": "The actual type of the target instance when needed for disambiguation."
+                },
+                "@schemaLocation": {
+                    "type": "string",
+                    "description": "A URI to a JSON-Schema file that defines additional attributes and relationships"
+                },
+                "@type": {
+                    "type": "string",
+                    "description": "When sub-classing, this defines the sub-class Extensible name"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Hyperlink reference"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "unique identifier"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the related entity."
+                },
+                "role": {
+                    "type": "string",
+                    "description": "Role played by the related party"
+                }
+            },
+            "title": "RelatedParty",
+            "description": "Related Entity reference. A related party defines party or party role linked to a specific entity."
+        },
+        "TimePeriod": {
+            "type": "object",
+            "properties": {
+                "endDateTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "1985-04-12T23:20:50.52Z",
+                    "description": "End of the time period, using IETC-RFC-3339 format"
+                },
+                "startDateTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "1985-04-12T23:20:50.52Z",
+                    "description": "Start of the time period, using IETC-RFC-3339 format"
+                }
+            },
+            "title": "TimePeriod",
+            "description": "A period of time, either as a deadline (endDateTime only) a startDateTime only, or both"
+        }
+    }
+}
